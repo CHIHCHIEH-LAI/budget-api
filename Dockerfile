@@ -17,7 +17,7 @@ COPY . .
 RUN go build -o main .
 
 # Step 7: Expose the application port
-EXPOSE 3000
+EXPOSE 8000
 
 # Step 8: Command to run the application
 CMD ["./main"]
