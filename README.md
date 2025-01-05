@@ -79,3 +79,17 @@ Create APIs to manage budgets for various categories
 - Response:
 	- 204 No Content (success).
 	- 404 Not Found (if the category ID does not exist).
+
+## Run Application
+1. Build and Start the Container:
+```
+docker-compose up --build
+```
+
+2. Stop the Container:
+```
+docker-compose down
+```
+
+3. Access the Application:
+	- Open http://localhost:3000 to access your Go application.
