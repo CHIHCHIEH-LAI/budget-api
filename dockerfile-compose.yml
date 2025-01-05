@@ -1,0 +1,11 @@
+version: '1.0'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000" # Map container's port 3000 to host's port 3000
+    volumes:
+      - ./budget.db:/app/budget.db # Persist the SQLite database file locally
+    restart: unless-stopped
