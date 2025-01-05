@@ -7,6 +7,9 @@ Create APIs to manage budgets for various categories
 3.	View all categories with their budgets and usage.
 4.	Delete a category and its associated budget.
 
+## Non-Functional Requirements
+1. Strong Consistency 
+
 ## API Design
 ### Add a New Category
 - Endpoint: POST /categories
