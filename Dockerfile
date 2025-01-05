@@ -13,11 +13,8 @@ RUN go mod download
 # Step 5: Copy the application source code
 COPY . .
 
-# Step 6: Build the Go application
-RUN go build -o main .
-
 # Step 7: Expose the application port
 EXPOSE 8000
 
 # Step 8: Command to run the application
-CMD ["./main"]
+CMD ["go", "run", "main.go"]
