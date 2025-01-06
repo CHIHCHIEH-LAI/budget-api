@@ -21,30 +21,84 @@ func ListCategories(c *gin.Context) {
 
 // CreateCategory creates a new category
 func CreateCategory(c *gin.Context) {
-	var category models.Category
-	if err := c.ShouldBindJSON(&category); err != nil {
+	var categoryCreate models.CategoryCreate
+	if err := c.ShouldBindJSON(&categoryCreate); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	if err := services.CreateCategory(category); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create category"})
-		return
+
+	category, err := services.CreateCategory(categoryCreate)
+	if err != nil {
+		if err.Error() == "Category already exists" {
+			c.JSON(http.StatusConflict, gin.H{"error": "Category already exists"})
+			return
+		} else if err.Error() == "Budget cannot be less than 0" {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Budget cannot be less than 0"})
+			return
+		} else if err.Error() == "Expense cannot be less than 0" {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Expense cannot be less than 0"})
+			return
+		} else if err.Error() == "Budget cannot be less than expense" {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Budget cannot be less than expense"})
+			return
+		} else {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create category"})
+			return
+		}
 	}
 	c.JSON(http.StatusCreated, category)
 }
 
-// UpdateCategory updates an existing category
-func UpdateCategory(c *gin.Context) {
+// UpdateCategoryBudget updates an existing category
+func UpdateCategoryBudget(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
-	var updatedData models.Category
-	if err := c.ShouldBindJSON(&updatedData); err != nil {
+	var categoryUpdate models.CategoryBudgetUpdate
+	if err := c.ShouldBindJSON(&categoryUpdate); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	category, err := services.UpdateCategory(uint(id), updatedData)
+	category, err := services.UpdateCategoryBudget(uint(id), categoryUpdate)
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "Category not found"})
+		if err.Error() == "Category not found" {
+			c.JSON(http.StatusNotFound, gin.H{"error": "Category not found"})
+			return
+		} else if err.Error() == "Budget cannot be less than 0" {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Budget cannot be less than 0"})
+			return
+		} else if err.Error() == "Budget cannot be less than expense" {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Budget cannot be less than expense"})
+			return
+		} else {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update category"})
+			return
+		}
+	}
+	c.JSON(http.StatusOK, category)
+}
+
+// UpdateCategoryExpense updates an existing category
+func UpdateCategoryExpense(c *gin.Context) {
+	id, _ := strconv.Atoi(c.Param("id"))
+	var categoryUpdate models.CategoryExpenseUpdate
+	if err := c.ShouldBindJSON(&categoryUpdate); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
+	}
+	category, err := services.UpdateCategoryExpense(uint(id), categoryUpdate)
+	if err != nil {
+		if err.Error() == "Category not found" {
+			c.JSON(http.StatusNotFound, gin.H{"error": "Category not found"})
+			return
+		} else if err.Error() == "Expense cannot be less than 0" {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Expense cannot be less than 0"})
+			return
+		} else if err.Error() == "Budget cannot be less than expense" {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Budget cannot be less than expense"})
+			return
+		} else {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update category"})
+			return
+		}
 	}
 	c.JSON(http.StatusOK, category)
 }
@@ -53,8 +107,13 @@ func UpdateCategory(c *gin.Context) {
 func DeleteCategory(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
 	if err := services.DeleteCategory(uint(id)); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete category"})
-		return
+		if err.Error() == "Category not found" {
+			c.JSON(http.StatusNotFound, gin.H{"error": "Category not found"})
+			return
+		} else {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete category"})
+			return
+		}
 	}
 	c.Status(http.StatusNoContent)
 }
