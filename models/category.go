@@ -1,9 +1,20 @@
 package models
 
-// Category represents a budget category
+type CategoryCreate struct {
+	Name   string  `json:"name" binding:"required"`
+	Budget float64 `json:"budget" binding:"required"`
+	Used   float64 `json:"used" default:"0"`
+}
+
+type CategoryUpdate struct {
+	Name   string  `json:"name" default:""`
+	Budget float64 `json:"budget" default:"0"`
+	Used   float64 `json:"used" default:"0"`
+}
+
 type Category struct {
-	ID     uint    `json:"id" gorm:"primaryKey"`
-	Name   string  `json:"name" gorm:"unique;not null"`
-	Budget float64 `json:"budget" gorm:"not null;check:budget >= 0"`
-	Used   float64 `json:"used" gorm:"not null;default:0;check:used >= 0"`
+	ID     uint    `json:"id" binding:"required"`
+	Name   string  `json:"name" binding:"required"`
+	Budget float64 `json:"budget" binding:"required"`
+	Used   float64 `json:"used" binding:"required"`
 }
