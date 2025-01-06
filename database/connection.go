@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log"
 
-	- "github.com/lib/pq"
+	_ "github.com/lib/pq"
 )
 
 var DB *sql.DB
