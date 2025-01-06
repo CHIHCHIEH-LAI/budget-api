@@ -12,7 +12,8 @@ func RegisterCategoryRoutes(router *gin.Engine) {
 	{
 		categoryRoutes.GET("", controllers.ListCategories)
 		categoryRoutes.POST("", controllers.CreateCategory)
-		categoryRoutes.PUT("/:id", controllers.UpdateCategory)
+		categoryRoutes.PUT("/:id/budget", controllers.UpdateCategoryBudget)
+		categoryRoutes.PUT("/:id/expense", controllers.UpdateCategoryExpense)
 		categoryRoutes.DELETE("/:id", controllers.DeleteCategory)
 	}
 }
