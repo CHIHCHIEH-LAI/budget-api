@@ -1,19 +1,37 @@
 package database
 
 import (
+	"database/sql"
+	"fmt"
 	"log"
 
-	"gorm.io/driver/sqlite"
-	"gorm.io/gorm"
+	- "github.com/lib/pq"
 )
 
-var DB *gorm.DB
+var DB *sql.DB
 
-// Init initializes the database connection
-func Init(filepath string) {
+func Open() error {
 	var err error
-	DB, err = gorm.Open(sqlite.Open(filepath), &gorm.Config{})
+	connStr := "user=postgres password=postgres dbname=budget_manager sslmode=disable"
+	DB, err = sql.Open("postgres", connStr)
 	if err != nil {
-		log.Fatal("Failed to connect to database:", err)
+		fmt.Errorf("Failed to connect to the database")
 	}
+
+	if err = DB.Ping(); err != nil {
+		fmt.Errorf("Failed to ping the database")
+	}
+
+	log.Println("Connected to the database")
+	return nil
+}
+
+func Close() error {
+	err := DB.Close()
+	if err != nil {
+		fmt.Errorf("Failed to close the database connection")
+	}
+
+	log.Println("Closed the database connection")
+	return nil
 }
