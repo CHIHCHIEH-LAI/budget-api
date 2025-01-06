@@ -32,12 +32,6 @@ func CreateCategory(c *gin.Context) {
 		if err.Error() == "Category already exists" {
 			c.JSON(http.StatusConflict, gin.H{"error": "Category already exists"})
 			return
-		} else if err.Error() == "Budget cannot be less than 0" {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Budget cannot be less than 0"})
-			return
-		} else if err.Error() == "Expense cannot be less than 0" {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Expense cannot be less than 0"})
-			return
 		} else if err.Error() == "Budget cannot be less than expense" {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "Budget cannot be less than expense"})
 			return
@@ -62,9 +56,6 @@ func UpdateCategoryBudget(c *gin.Context) {
 		if err.Error() == "Category not found" {
 			c.JSON(http.StatusNotFound, gin.H{"error": "Category not found"})
 			return
-		} else if err.Error() == "Budget cannot be less than 0" {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Budget cannot be less than 0"})
-			return
 		} else if err.Error() == "Budget cannot be less than expense" {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "Budget cannot be less than expense"})
 			return
@@ -88,9 +79,6 @@ func UpdateCategoryExpense(c *gin.Context) {
 	if err != nil {
 		if err.Error() == "Category not found" {
 			c.JSON(http.StatusNotFound, gin.H{"error": "Category not found"})
-			return
-		} else if err.Error() == "Expense cannot be less than 0" {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Expense cannot be less than 0"})
 			return
 		} else if err.Error() == "Budget cannot be less than expense" {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "Budget cannot be less than expense"})
