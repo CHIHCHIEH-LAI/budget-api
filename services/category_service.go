@@ -38,17 +38,6 @@ func CreateCategory(category models.CategoryCreate) (models.Category, error) {
 		return models.Category{}, fmt.Errorf("failed to start transaction: %v", err)
 	}
 
-	// TODO: Create a validator for category
-	if category.Budget < 0 {
-		tx.Rollback()
-		return models.Category{}, fmt.Errorf("budget cannot be less than 0")
-	}
-
-	if category.Expense < 0 {
-		tx.Rollback()
-		return models.Category{}, fmt.Errorf("expense cannot be less than 0")
-	}
-
 	if category.Budget < category.Expense {
 		tx.Rollback()
 		return models.Category{}, fmt.Errorf("budget cannot be less than expense")
@@ -92,12 +81,6 @@ func UpdateCategoryBudget(id uint, categoryUpdate models.CategoryBudgetUpdate) (
 		return models.Category{}, fmt.Errorf("failed to start transaction: %v", err)
 	}
 
-	budgetUpdate := categoryUpdate.Budget
-	if budgetUpdate < 0 {
-		tx.Rollback()
-		return models.Category{}, fmt.Errorf("budget cannot be less than 0")
-	}
-
 	var category models.Category
 	err = tx.QueryRow("SELECT id, name, budget, expense FROM categories WHERE id = $1 FOR UPDATE", id).Scan(&category.ID, &category.Name, &category.Budget, &category.Expense)
 	if err == sql.ErrNoRows {
@@ -108,12 +91,12 @@ func UpdateCategoryBudget(id uint, categoryUpdate models.CategoryBudgetUpdate) (
 		return models.Category{}, fmt.Errorf("failed to query category: %v", err)
 	}
 
-	if budgetUpdate < category.Expense {
+	if categoryUpdate.Budget < category.Expense {
 		tx.Rollback()
 		return models.Category{}, fmt.Errorf("budget cannot be less than expense")
 	}
 
-	_, err = tx.Exec("UPDATE categories SET budget = $1 WHERE id = $2", budgetUpdate, id)
+	_, err = tx.Exec("UPDATE categories SET budget = $1 WHERE id = $2", categoryUpdate.Budget, id)
 	if err != nil {
 		tx.Rollback()
 		return models.Category{}, fmt.Errorf("failed to update category: %v", err)
@@ -140,12 +123,6 @@ func UpdateCategoryExpense(id uint, categoryUpdate models.CategoryExpenseUpdate)
 		return models.Category{}, fmt.Errorf("failed to start transaction: %v", err)
 	}
 
-	expenseUpdate := categoryUpdate.Expense
-	if expenseUpdate < 0 {
-		tx.Rollback()
-		return models.Category{}, fmt.Errorf("expense cannot be less than 0")
-	}
-
 	var category models.Category
 	err = tx.QueryRow("SELECT id, name, budget, expense FROM categories WHERE id = $1 FOR UPDATE", id).Scan(&category.ID, &category.Name, &category.Budget, &category.Expense)
 	if err == sql.ErrNoRows {
@@ -156,12 +133,12 @@ func UpdateCategoryExpense(id uint, categoryUpdate models.CategoryExpenseUpdate)
 		return models.Category{}, fmt.Errorf("failed to query category: %v", err)
 	}
 
-	if category.Budget < expenseUpdate {
+	if category.Budget < categoryUpdate.Expense {
 		tx.Rollback()
 		return models.Category{}, fmt.Errorf("expense cannot be more than budget")
 	}
 
-	_, err = tx.Exec("UPDATE categories SET expense = $1 WHERE id = $2", expenseUpdate, id)
+	_, err = tx.Exec("UPDATE categories SET expense = $1 WHERE id = $2", categoryUpdate.Expense, id)
 	if err != nil {
 		tx.Rollback()
 		return models.Category{}, fmt.Errorf("failed to update category: %v", err)
