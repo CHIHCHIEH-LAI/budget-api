@@ -12,7 +12,7 @@ var DB *sql.DB
 
 func Open() error {
 	var err error
-	connStr := "user=postgres password=postgres dbname=budget_manager sslmode=disable"
+	connStr := "user=postgres password=postgres dbname=budgetDB sslmode=disable"
 	DB, err = sql.Open("postgres", connStr)
 	if err != nil {
 		fmt.Errorf("Failed to connect to the database")
