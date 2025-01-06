@@ -8,7 +8,7 @@ import (
 
 // RegisterCategoryRoutes registers category-related routes
 func RegisterCategoryRoutes(router *gin.Engine) {
-	categoryRoutes := router.Group("/categories")
+	categoryRoutes := router.Group("/api/v1/categories")
 	{
 		categoryRoutes.GET("", controllers.ListCategories)
 		categoryRoutes.POST("", controllers.CreateCategory)
