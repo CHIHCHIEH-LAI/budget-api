@@ -36,7 +36,8 @@ Create APIs to manage budgets for various categories
         "expense": 50
     }
     ```
-    - 400 Bad Request (if name or budget is invalid).
+    - 400 Bad Request (if name, budget or expense is invalid).
+    - 409 Conflict (if category name already exists)
 
 ### Update Category Budget
 - Endpoint: PUT /categories/{category_id}/budget
@@ -57,6 +58,8 @@ Create APIs to manage budgets for various categories
         "expense": 100
     }
     ```
+    - 400 Bad Request (if budget is invalid).
+    - 404 Not Found (if the category ID does not exist).
 
 ### Update Category Expense
 - Endpoint: PUT /categories/{category_id}/expense
@@ -77,6 +80,8 @@ Create APIs to manage budgets for various categories
         "expense": 100
     }
     ```
+    - 400 Bad Request (if expense is invalid).
+    - 404 Not Found (if the category ID does not exist).
 
 ### View All Categories
 - Endpoint: GET /categories
