@@ -67,7 +67,7 @@ Create APIs to manage budgets for various categories
 - Request Body:
 ```
 {
-    "expense": 600
+    "expense": 100
 }
 ```
 - Response Body:
