@@ -2,21 +2,25 @@
 Create APIs to manage budgets for various categories
 
 ## Functional Requirements
-1.	Add a new category with a budget and initial used budget (optional, default to 0).
-2.	Update the budget or budget used for an existing category.
-3.	View all categories with their budgets and usage.
-4.	Delete a category and its associated budget.
+1.	Add a new category with a budget and initial expense (optional, default to 0).
+2.	Update the budget for an existing category.
+3.	Update the expense for an existing category.
+4.	View all categories with their budgets and expenses.
+5.	Delete a category and its associated budget.
+
+## Non-Functional Requirements
+1. Strong consistency
 
 ## API Design
 ### Add a New Category
 - Endpoint: POST /categories
-- Description: Adds a new category with a specified budget and optional initial budget used.
+- Description: Adds a new category with a specified budget and optional initial expense.
 - Request Body:
 ```
 {
     "name": "Groceries",
     "budget": 500,
-    "used": 50
+    "expense": 50
 }
 ```
 - Response:
@@ -26,19 +30,18 @@ Create APIs to manage budgets for various categories
         "id": 1,
         "name": "Groceries",
         "budget": 500,
-        "used": 50
+        "expense": 50
     }
     ```
     - 400 Bad Request (if name or budget is invalid).
 
-### Update Budget or Budget Used
-- Endpoint: PUT /categories/{category_id}
-- Description: Updates the budget or budget used for a category.
+### Update Category Budget
+- Endpoint: PUT /categories/{category_id}/budget
+- Description: Updates the budget for a category.
 - Request Body:
 ```
 {
-    "budget": 600,
-    "used": 100
+    "budget": 600
 }
 ```
 - Response Body:
@@ -48,7 +51,27 @@ Create APIs to manage budgets for various categories
         "id": 1,
         "name": "Groceries",
         "budget": 600,
-        "used": 100
+        "expense": 100
+    }
+    ```
+
+### Update Category Expense
+- Endpoint: PUT /categories/{category_id}/expense
+- Description: Updates the expense for a category.
+- Request Body:
+```
+{
+    "expense": 600
+}
+```
+- Response Body:
+    - 200 OK
+    ```
+    {
+        "id": 1,
+        "name": "Groceries",
+        "budget": 600,
+        "expense": 100
     }
     ```
 
@@ -79,7 +102,3 @@ Create APIs to manage budgets for various categories
 - Response:
 	- 204 No Content (success).
 	- 404 Not Found (if the category ID does not exist).
-
-
-## Improvement
-1. Use database transaction to ensure strong consistency.
