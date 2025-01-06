@@ -1,6 +1,7 @@
 # Budget APIs
 Create APIs to manage budgets for various categories
 
+
 ## Functional Requirements
 1.	Add a new category with a budget and initial expense (optional, default to 0).
 2.	Update the budget for an existing category.
@@ -8,8 +9,10 @@ Create APIs to manage budgets for various categories
 4.	View all categories with their budgets and expenses.
 5.	Delete a category and its associated budget.
 
+
 ## Non-Functional Requirements
 1. Strong consistency
+
 
 ## API Design
 ### Add a New Category
