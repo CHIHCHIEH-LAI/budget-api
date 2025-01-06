@@ -3,19 +3,19 @@ package main
 import (
 	"budget_manager/database"
 	"budget_manager/routes"
+	"log"
 
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	// Specify the database file path
-	dbFilePath := "budget.db"
 
-	// Initialize the database
-	database.Init(dbFilePath)
-
-	// Run migrations
-	database.Migrate()
+	// Open the database
+	err := database.Open()
+	if err != nil {
+		log.Fatal("Error opening database: ", err)
+	}
+	defer database.Close()
 
 	// Set up the Gin router
 	router := gin.Default()
@@ -24,5 +24,6 @@ func main() {
 	routes.RegisterCategoryRoutes(router)
 
 	// Start the server
-	router.Run(":8000")
+	log.Println("Starting server on port 8000")
+	log.Fatal(router.Run(":8000"))
 }
