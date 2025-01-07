@@ -110,3 +110,57 @@ Create APIs to manage budgets for various categories
 - Response:
 	- 204 No Content (success).
 	- 404 Not Found (if the category ID does not exist).
+
+## Deploy
+### Prerequisites
+1. Install Docker Desktop and ensure the Kubernetes option is enabled.
+2. Install kubectl 
+```
+brew install kubectl
+```
+3. Verify Kubernetes setup 
+```
+kubectl cluster-info
+```
+4. Create a local Docker image 
+```
+docker build -t budget-api:latest .
+```
+
+### Apply Kubernetes Configuration
+1. Prepare the YAML files:
+    - `deployment.yaml`: Defines how the app should be deployed.
+	- `service.yaml`: Exposes the app on localhost.
+2. Apply the configurations:
+```
+kubectl apply -f k8s/deployment.yaml
+kubectl apply -f k8s/service.yaml
+```
+
+### Verify the Deployment
+1. Check the status of the pods:
+```
+kubectl get pods
+```
+2. Check the status of the service:
+```
+kubectl get services
+```
+
+### Access the Application
+If you used the NodePort type in service.yaml, access the application via the node’s port:
+1. Find the assigned NodePort:
+```
+kubectl get service budget-api-service
+```
+Example output:
+```
+NAME                  TYPE       CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
+budget-api-service    NodePort   10.96.123.45    <none>        80:31234/TCP     5m
+```
+In this case, the NodePort is 31234.
+
+2. Access the application in your browser or via curl:
+```
+curl http://localhost:31234
+```
