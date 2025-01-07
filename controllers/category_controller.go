@@ -53,8 +53,8 @@ func UpdateCategoryBudget(c *gin.Context) {
 	}
 	category, err := services.UpdateCategoryBudget(uint(id), categoryUpdate)
 	if err != nil {
-		if err.Error() == "category not found" {
-			c.JSON(http.StatusNotFound, gin.H{"error": "Category not found"})
+		if err.Error() == "category does not exist" {
+			c.JSON(http.StatusNotFound, gin.H{"error": "Category does not exist"})
 			return
 		} else if err.Error() == "budget cannot be less than expense" {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "Budget cannot be less than expense"})
@@ -77,8 +77,8 @@ func UpdateCategoryExpense(c *gin.Context) {
 	}
 	category, err := services.UpdateCategoryExpense(uint(id), categoryUpdate)
 	if err != nil {
-		if err.Error() == "category not found" {
-			c.JSON(http.StatusNotFound, gin.H{"error": "Category not found"})
+		if err.Error() == "category does not exist" {
+			c.JSON(http.StatusNotFound, gin.H{"error": "Category does not exist"})
 			return
 		} else if err.Error() == "expense cannot be more than budget" {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "Expense cannot be more than budget"})
