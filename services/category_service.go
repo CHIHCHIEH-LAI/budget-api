@@ -11,7 +11,7 @@ import (
 func GetAllCategories() ([]models.Category, error) {
 	rows, err := database.DB.Query("SELECT id, name, budget, expense FROM categories")
 	if err != nil {
-		return nil, fmt.Errorf("failed to query categories: %v", err)
+		return nil, fmt.Errorf("failed to query categories")
 	}
 	defer rows.Close()
 
@@ -19,13 +19,13 @@ func GetAllCategories() ([]models.Category, error) {
 	for rows.Next() {
 		var category models.Category
 		if err := rows.Scan(&category.ID, &category.Name, &category.Budget, &category.Expense); err != nil {
-			return nil, fmt.Errorf("failed to scan category: %v", err)
+			return nil, fmt.Errorf("failed to scan category")
 		}
 		categories = append(categories, category)
 	}
 
 	if err := rows.Err(); err != nil {
-		return nil, fmt.Errorf("failed to iterate categories: %v", err)
+		return nil, fmt.Errorf("failed to iterate categories")
 	}
 
 	return categories, nil
@@ -35,7 +35,7 @@ func GetAllCategories() ([]models.Category, error) {
 func CreateCategory(category models.CategoryCreate) (models.Category, error) {
 	tx, err := database.DB.Begin()
 	if err != nil {
-		return models.Category{}, fmt.Errorf("failed to start transaction: %v", err)
+		return models.Category{}, fmt.Errorf("failed to start transaction")
 	}
 
 	if category.Budget < category.Expense {
@@ -50,25 +50,25 @@ func CreateCategory(category models.CategoryCreate) (models.Category, error) {
 		return models.Category{}, fmt.Errorf("category already exists")
 	} else if err != sql.ErrNoRows {
 		tx.Rollback()
-		return models.Category{}, fmt.Errorf("failed to query category: %v", err)
+		return models.Category{}, fmt.Errorf("failed to query category")
 	}
 
 	_, err = tx.Exec("INSERT INTO categories (name, budget, expense) VALUES ($1, $2, $3)", category.Name, category.Budget, category.Expense)
 	if err != nil {
 		tx.Rollback()
-		return models.Category{}, fmt.Errorf("failed to insert category: %v", err)
+		return models.Category{}, fmt.Errorf("failed to insert category")
 	}
 
 	var categoryCreated models.Category
 	err = tx.QueryRow("SELECT id, name, budget, expense FROM categories WHERE name = $1", category.Name).Scan(&categoryCreated.ID, &categoryCreated.Name, &categoryCreated.Budget, &categoryCreated.Expense)
 	if err != nil {
 		tx.Rollback()
-		return models.Category{}, fmt.Errorf("failed to query category: %v", err)
+		return models.Category{}, fmt.Errorf("failed to query category")
 	}
 
 	if err := tx.Commit(); err != nil {
 		tx.Rollback()
-		return models.Category{}, fmt.Errorf("failed to commit transaction: %v", err)
+		return models.Category{}, fmt.Errorf("failed to commit transaction")
 	}
 
 	return categoryCreated, nil
@@ -78,7 +78,7 @@ func CreateCategory(category models.CategoryCreate) (models.Category, error) {
 func UpdateCategoryBudget(id uint, categoryUpdate models.CategoryBudgetUpdate) (models.Category, error) {
 	tx, err := database.DB.Begin()
 	if err != nil {
-		return models.Category{}, fmt.Errorf("failed to start transaction: %v", err)
+		return models.Category{}, fmt.Errorf("failed to start transaction")
 	}
 
 	var category models.Category
@@ -88,7 +88,7 @@ func UpdateCategoryBudget(id uint, categoryUpdate models.CategoryBudgetUpdate) (
 		return models.Category{}, fmt.Errorf("category does not exist")
 	} else if err != nil {
 		tx.Rollback()
-		return models.Category{}, fmt.Errorf("failed to query category: %v", err)
+		return models.Category{}, fmt.Errorf("failed to query category")
 	}
 
 	if categoryUpdate.Budget < category.Expense {
@@ -99,18 +99,18 @@ func UpdateCategoryBudget(id uint, categoryUpdate models.CategoryBudgetUpdate) (
 	_, err = tx.Exec("UPDATE categories SET budget = $1 WHERE id = $2", categoryUpdate.Budget, id)
 	if err != nil {
 		tx.Rollback()
-		return models.Category{}, fmt.Errorf("failed to update category: %v", err)
+		return models.Category{}, fmt.Errorf("failed to update category")
 	}
 
 	err = tx.QueryRow("SELECT id, name, budget, expense FROM categories WHERE id = $1", id).Scan(&category.ID, &category.Name, &category.Budget, &category.Expense)
 	if err != nil {
 		tx.Rollback()
-		return models.Category{}, fmt.Errorf("failed to query category: %v", err)
+		return models.Category{}, fmt.Errorf("failed to query category")
 	}
 
 	if err := tx.Commit(); err != nil {
 		tx.Rollback()
-		return models.Category{}, fmt.Errorf("failed to commit transaction: %v", err)
+		return models.Category{}, fmt.Errorf("failed to commit transaction")
 	}
 
 	return category, nil
