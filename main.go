@@ -3,6 +3,7 @@ package main
 import (
 	"budget_manager/database"
 	"budget_manager/routes"
+	"budget_manager/utility"
 	"log"
 
 	"github.com/gin-gonic/gin"
@@ -10,8 +11,15 @@ import (
 
 func main() {
 
+	// Load environment variables
+	dotenv_filepath := ".env"
+	utility.LoadDotenvIfExists(dotenv_filepath)
+
+	// Get database connection information from environment variables
+	dbConfig := utility.GetDBConfig()
+
 	// Open the database
-	err := database.Open()
+	err := database.Open(dbConfig)
 	if err != nil {
 		log.Fatal("Error opening database: ", err)
 	}
