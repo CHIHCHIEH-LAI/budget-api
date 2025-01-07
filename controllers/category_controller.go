@@ -29,10 +29,10 @@ func CreateCategory(c *gin.Context) {
 
 	category, err := services.CreateCategory(categoryCreate)
 	if err != nil {
-		if err.Error() == "Category already exists" {
+		if err.Error() == "category already exists" {
 			c.JSON(http.StatusConflict, gin.H{"error": "Category already exists"})
 			return
-		} else if err.Error() == "Budget cannot be less than expense" {
+		} else if err.Error() == "budget cannot be less than expense" {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "Budget cannot be less than expense"})
 			return
 		} else {
@@ -53,10 +53,10 @@ func UpdateCategoryBudget(c *gin.Context) {
 	}
 	category, err := services.UpdateCategoryBudget(uint(id), categoryUpdate)
 	if err != nil {
-		if err.Error() == "Category not found" {
+		if err.Error() == "category not found" {
 			c.JSON(http.StatusNotFound, gin.H{"error": "Category not found"})
 			return
-		} else if err.Error() == "Budget cannot be less than expense" {
+		} else if err.Error() == "budget cannot be less than expense" {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "Budget cannot be less than expense"})
 			return
 		} else {
@@ -77,10 +77,10 @@ func UpdateCategoryExpense(c *gin.Context) {
 	}
 	category, err := services.UpdateCategoryExpense(uint(id), categoryUpdate)
 	if err != nil {
-		if err.Error() == "Category not found" {
+		if err.Error() == "category not found" {
 			c.JSON(http.StatusNotFound, gin.H{"error": "Category not found"})
 			return
-		} else if err.Error() == "Budget cannot be less than expense" {
+		} else if err.Error() == "budget cannot be less than expense" {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "Budget cannot be less than expense"})
 			return
 		} else {
@@ -95,7 +95,7 @@ func UpdateCategoryExpense(c *gin.Context) {
 func DeleteCategory(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
 	if err := services.DeleteCategory(uint(id)); err != nil {
-		if err.Error() == "Category not found" {
+		if err.Error() == "category not found" {
 			c.JSON(http.StatusNotFound, gin.H{"error": "Category not found"})
 			return
 		} else {
