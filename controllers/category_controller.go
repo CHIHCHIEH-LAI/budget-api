@@ -80,8 +80,8 @@ func UpdateCategoryExpense(c *gin.Context) {
 		if err.Error() == "category not found" {
 			c.JSON(http.StatusNotFound, gin.H{"error": "Category not found"})
 			return
-		} else if err.Error() == "budget cannot be less than expense" {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Budget cannot be less than expense"})
+		} else if err.Error() == "expense cannot be more than budget" {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Expense cannot be more than budget"})
 			return
 		} else {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update category"})
