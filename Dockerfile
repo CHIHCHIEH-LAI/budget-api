@@ -19,5 +19,11 @@ RUN go build -o main .
 # Step 7: Expose the application port
 EXPOSE 8000
 
+ENV DB_HOST=localhost
+ENV DB_PORT=5432
+ENV DB_USER=postgres
+ENV DB_PASSWORD=postgres
+ENV DB_NAME=postgres
+
 # Step 8: Command to run the application
 CMD ["./main"]
