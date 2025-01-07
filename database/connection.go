@@ -10,16 +10,16 @@ import (
 
 var DB *sql.DB
 
-func Open() error {
+func Open(config Config) error {
 	var err error
-	connStr := "user=postgres password=postgres dbname=budgetDB sslmode=disable"
+	connStr := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", config.Host, config.Port, config.User, config.Password, config.Name)
 	DB, err = sql.Open("postgres", connStr)
 	if err != nil {
-		fmt.Errorf("Failed to connect to the database")
+		return fmt.Errorf("failed to open the database: %v", err)
 	}
 
 	if err = DB.Ping(); err != nil {
-		fmt.Errorf("Failed to ping the database")
+		return fmt.Errorf("failed to ping the database: %v", err)
 	}
 
 	log.Println("Connected to the database")
@@ -29,7 +29,7 @@ func Open() error {
 func Close() error {
 	err := DB.Close()
 	if err != nil {
-		fmt.Errorf("Failed to close the database connection")
+		return fmt.Errorf("failed to close the database connection")
 	}
 
 	log.Println("Closed the database connection")
