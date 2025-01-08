@@ -1,6 +1,11 @@
 # Budget APIs
 Create APIs to manage budgets for various categories
 
+## Table of Contents
+- Functional Requirements
+- Non-Functional Requirements
+- API Design
+- Deployment
 
 ## Functional Requirements
 1.	Add a new category with a budget and initial expense (optional, default to 0).
@@ -111,7 +116,7 @@ Create APIs to manage budgets for various categories
 	- 204 No Content (success).
 	- 404 Not Found (if the category ID does not exist).
 
-## Deploy
+## Deployment
 ### Prerequisites
 1. Install Docker Desktop and ensure the Kubernetes option is enabled.
 2. Install kubectl 
